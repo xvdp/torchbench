@@ -14,6 +14,7 @@ def evaluate_language_model(
     model_output_transform,
     send_data_to_device,
     device="cuda",
+    force=False
 ):
     n_steps, eval_loss = 0, 0
 
@@ -50,15 +51,16 @@ def evaluate_language_model(
                     iterator.close()
                     break
 
-                # get the cached values from sotabench.com if available
-                client = Client.public()
-                cached_res = client.get_results_by_run_hash(run_hash)
-                if cached_res:
-                    iterator.close()
-                    print(
-                        "No model change detected (using the first batch "
-                        "run_hash). Returning cached results."
-                    )
-                    return cached_res, run_hash
+                if not force:
+                    # get the cached values from sotabench.com if available
+                    client = Client.public()
+                    cached_res = client.get_results_by_run_hash(run_hash)
+                    if cached_res:
+                        iterator.close()
+                        print(
+                            "No model change detected (using the first batch "
+                            "run_hash). Returning cached results."
+                        )
+                        return cached_res, run_hash
 
     return {"Perplexity": np.exp(eval_loss / n_steps)}, run_hash

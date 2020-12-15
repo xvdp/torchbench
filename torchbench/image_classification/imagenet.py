@@ -102,6 +102,7 @@ class ImageNet:
         paper_pwc_id: str = None,
         paper_results: dict = None,
         pytorch_hub_url: str = None,
+        force: bool = False
     ) -> BenchmarkResult:
         """Benchmarking function.
 
@@ -206,6 +207,7 @@ class ImageNet:
             model_output_transform=model_output_transform,
             send_data_to_device=send_data_to_device,
             device=device,
+            force=force
         )
 
         print(

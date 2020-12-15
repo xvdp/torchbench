@@ -31,6 +31,7 @@ class WikiText103:
         paper_pwc_id: str = None,
         paper_results: dict = None,
         pytorch_hub_url: str = None,
+        force: bool = False
     ) -> BenchmarkResult:
 
         config = locals()
@@ -66,6 +67,7 @@ class WikiText103:
             send_data_to_device=cls.send_data_to_device,
             test_loader=test_loader,
             device=device,
+            force=force
         )
 
         # Valid Split
@@ -90,6 +92,7 @@ class WikiText103:
             send_data_to_device=cls.send_data_to_device,
             test_loader=valid_loader,
             device=device,
+            force=force
         )
 
         # Get final results

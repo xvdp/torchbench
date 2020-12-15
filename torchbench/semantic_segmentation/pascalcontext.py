@@ -49,6 +49,7 @@ class PASCALContext:
         paper_pwc_id: str = None,
         paper_results: dict = None,
         pytorch_hub_url: str = None,
+        force: bool = False
     ) -> BenchmarkResult:
 
         config = locals()
@@ -91,6 +92,7 @@ class PASCALContext:
             model_output_transform=model_output_transform,
             send_data_to_device=send_data_to_device,
             device=device,
+            force=force
         )
 
         print(test_results)

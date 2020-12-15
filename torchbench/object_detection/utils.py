@@ -193,6 +193,7 @@ def evaluate_detection_coco(
     model_output_transform,
     send_data_to_device,
     device="cuda",
+    force=False
 ):
 
     coco = get_coco_api_from_dataset(test_loader.dataset)
@@ -222,24 +223,25 @@ def evaluate_detection_coco(
                     iterator.close()
                     break
 
-                # get the cached values from sotabench.com if available
-                client = Client.public()
-                cached_res = client.get_results_by_run_hash(run_hash)
-                if cached_res:
-                    iterator.close()
-                    print(
-                        "No model change detected (using the first batch run "
-                        "hash). Returning cached results."
-                    )
+                if not force:
+                    # get the cached values from sotabench.com if available
+                    client = Client.public()
+                    cached_res = client.get_results_by_run_hash(run_hash)
+                    if cached_res:
+                        iterator.close()
+                        print(
+                            "No model change detected (using the first batch run "
+                            "hash). Returning cached results."
+                        )
 
-                    speed_mem_metrics = {
-                        'Tasks / Evaluation Time': None,
-                        'Evaluation Time': None,
-                        'Tasks': None,
-                        'Max Memory Allocated (Total)': None,
-                    }
+                        speed_mem_metrics = {
+                            'Tasks / Evaluation Time': None,
+                            'Evaluation Time': None,
+                            'Tasks': None,
+                            'Max Memory Allocated (Total)': None,
+                        }
 
-                    return cached_res, speed_mem_metrics, run_hash
+                        return cached_res, speed_mem_metrics, run_hash
 
     exec_time = (time.time() - init_time)
 
